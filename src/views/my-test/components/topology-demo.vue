@@ -1,0 +1,400 @@
+<template>
+  <div class="container">
+    <h2>拓扑图demo</h2>
+    <h3>vis-topology</h3>
+    <div id="vis-topology" />
+    <h3>AntV-G6</h3>
+    <div id="g6-topology" />
+  </div>
+</template>
+
+<script>
+import vis from 'vis'
+import G6 from '@antv/g6'
+export default {
+  name: 'Topology',
+  data() {
+    return {
+      nodes: [],
+      edges: [],
+      network: null
+    }
+  },
+  mounted() {
+    // window.addEventListener('load', () => {
+    this.drawVis()
+    this.drawG6()
+    // })
+  },
+  methods: {
+    drawVis() {
+      var EDGE_LENGTH_MAIN = 150
+      var EDGE_LENGTH_SUB = 50
+
+      // Create a data table with this.nodes.
+      this.nodes = []
+
+      // Create a data table with links.
+      this.edges = []
+
+      this.nodes.push({
+        id: 1,
+        label: 'Main',
+        image: require('@/assets/AntvG6/Network-Pipe-icon.png'),
+        shape: 'image'
+      })
+      this.nodes.push({
+        id: 2,
+        label: 'Office',
+        image: require('@/assets/AntvG6/Network-Pipe-icon.png'),
+        shape: 'image'
+      })
+      this.nodes.push({
+        id: 3,
+        label: 'Wireless',
+        image: require('@/assets/AntvG6/Network-Pipe-icon.png'),
+        shape: 'image'
+      })
+      this.edges.push({ from: 1, to: 2, length: EDGE_LENGTH_MAIN })
+      this.edges.push({ from: 1, to: 3, length: EDGE_LENGTH_MAIN })
+
+      for (let i = 4; i <= 7; i++) {
+        this.nodes.push({
+          id: i,
+          label: 'Computer',
+          image: require('@/assets/AntvG6/Hardware-My-Computer-3-icon.png'),
+          shape: 'image'
+        })
+        this.edges.push({ from: 2, to: i, length: EDGE_LENGTH_SUB })
+      }
+
+      this.nodes.push({
+        id: 101,
+        label: 'Printer',
+        image: require('@/assets/AntvG6/Hardware-Printer-Blue-icon.png'),
+        shape: 'image'
+      })
+      this.edges.push({ from: 2, to: 101, length: EDGE_LENGTH_SUB })
+
+      this.nodes.push({
+        id: 102,
+        label: 'Laptop',
+        image: require('@/assets/AntvG6/Hardware-Laptop-1-icon.png'),
+        shape: 'image'
+      })
+      this.edges.push({ from: 3, to: 102, length: EDGE_LENGTH_SUB })
+
+      this.nodes.push({
+        id: 103,
+        label: 'network drive',
+        image: require('@/assets/AntvG6/Network-Drive-icon.png'),
+        shape: 'image'
+      })
+      this.edges.push({ from: 1, to: 103, length: EDGE_LENGTH_SUB })
+
+      this.nodes.push({
+        id: 104,
+        label: 'Internet',
+        image: require('@/assets/AntvG6/System-Firewall-2-icon.png'),
+        shape: 'image'
+      })
+      this.edges.push({ from: 1, to: 104, length: EDGE_LENGTH_SUB })
+
+      for (let i = 200; i <= 201; i++) {
+        this.nodes.push({
+          id: i,
+          label: 'Smartphone',
+          image: require('@/assets/AntvG6/Hardware-My-PDA-02-icon.png'),
+          shape: 'image'
+        })
+        this.edges.push({ from: 3, to: i, length: EDGE_LENGTH_SUB })
+      }
+
+      // create a network
+      var container = document.getElementById('vis-topology')
+      var data = {
+        nodes: this.nodes,
+        edges: this.edges
+      }
+      var options = {}
+      this.network = new vis.Network(container, data, options)
+    },
+    drawG6() {
+      const Util = G6.Util
+      const data = {
+        nodes: [
+          {
+            id: 'node1',
+            x: 100,
+            y: 100,
+            type: 'circle-animate',
+            size: 20,
+            label: `Scale\nAnimation`,
+            labelCfg: {
+              position: 'center'
+            }
+          },
+          {
+            id: 'node2',
+            x: 300,
+            y: 200,
+            type: 'background-animate',
+            color: '#40a9ff',
+            size: 20,
+            label: 'Background Animation',
+            labelCfg: {
+              position: 'left',
+              offset: 10
+            }
+          },
+          {
+            id: 'node3',
+            x: 400,
+            y: 100,
+            size: [40, 40],
+            type: 'inner-animate',
+            img: 'data:image/webp;base64,UklGRq4FAABXRUJQVlA4IKIFAABwHwCdASo8ADwAPiEMhEGhhv6rQAYAgS2NHsdCq/4D8AOoA64OEUAj/XPxVwyvRGvyO/gGxN/t3oK/1X6zesX3L/p/RP/2HCgKAB9AGeAbCB+AGwAbQBtA/8c/m/4PYHTonm+SzRH6B9sv2i/rOZC+G/ln9l/ML/GdoD7APcA/TD+09QDzAfrX+vHYM9AD+Uf0zrAPQA/bH0vv2t+CH9qf2R+A39e6X098/I7IAcLcs8Gjmc/9T7gPbX9H+wJ+rPVV9En9ZmBI5oUiYhkYHIVjRr9hzCTPcV5Rs/wjjIHkxPgtr/3ALZSuUm146HHwqQVA23hnnqH/4aJ/k4v4hU6RBZ0AAAD+//8ARPyL9yWIlAbWBAD0oKSqlYWreuRa3Oj02u+TvSQS8iwMYewUYTWLDNp9wOlFJaWnqE+za35UwUXuDAT6T0I4fwY+u+qrRVhl+S1ir4X7BQiNswug5AX+MjQcXEeUwfSIEUT+DFPCr+BUiwTbFxLni7fv61vRbmXoauLz4tiqOFTzEGP8tNXP5+H7mZVGfNjIxapT3FGUtqBdp/SD5cTOYOkn2fawkpqpCSqf2+CfiGWtIF673fEzlk/hIbWDhQ81C/ddxLn609d/5efckbdZ8HZbhhVmM82/Uat7CFmw1SH5xCxRxEEhjpf1EP1Xn5q9VZfm1+OFTab/MN67Xha8K//5oVBlMgZALE653X0fas/+2xMqiyCu5Wa7PHsCwbBwqROfNmzi4LPOTjkFPHVKDD1Nfj4/sul6cANdF68rf2jszlyZsUUoLTP7H3swSroc3ssNXSRVAcYd7+iBZpfoAYWvKgnr+Hv62fHZX5ZbjYbYzVjq6fsXkubto858NuUx4+ILb5y7dP6W3/IYVeUSF0yZseKIZhOMs9BBf5uB2Y3Ott//+1OG7hYINzcqigrzWAOJbSmVw3G0ULywkobx+rvfk8VmZFzQGgP/+4T74mp/vsZyM1NLguiTO2gNO05tcpXwveq5mrcweXrJ/bRZDmU2KBrnXhkXq+735c+UHTFq4h4jMOPm5shKioB6XaqhUf3DJlMg8937g/SKjrgD0H5sNm0/k4FfilBbcrsjc3dd6cwEYJo3CNhe3SpNJ2geNXyV4/hq/BZXZ1kiVknjmf5cUx7Tv/9Sb+fQ/DgAsRNSz1wiVodiLjP7aVrkxbWx5gJ8U/j0o1Ipm/nyDZRPrQXmbPAcy1eDDejxTDBKe42ElHpC2QlFdhOedsp4i9QVjt8EqWGy1YzPaGqZhCVg/LWt8/+4BmiCzNGtpR21MGJf4kI/n/1sbe36e1QBCBAx4EVfTM82ZM2lh0P189e7eY0A3NzXWVrUek8SEn+DYYCQeEaC5hDHGreFHT1baY6KyrFx3G9oMm3fLrCqmNjFRnZa3LB/5m8FgCpq9B/1OCLRE5GzVTZnVzj/4V38PgCIpX16Kznijf01+MkDeS9oCF2hEXQ9tr+mPLrjGy4Cg5fyLgyCj1fUq33nMf79Svli2h83m3gqkoxJcXvBetFQP8V/gRjBNGmFXK5TfwLhbolWEjDqUGK3n+hxzQLif9zreYO88EIRTUNbzE1/Sn7rBEtjB0uawNje5OubWsB62SOlMZoZpxrDbMb4UvQrODPhSafmhcYe9zm/dHxssMfUthhDKjyMhoRhngPjbzfGXmIV2Omgrn/zbefK/PawUGSH6x4Qk4HCN4/X8S+XCf51JJtOQeHST/yfwg69uMkE07SONnhGUrL6j5oQn6JI+zkaH/H/P/Ti/pfOTfAWxQNiMvWX08mqbuUweFSQ/G5YUP/uCvZAXutf1+Nhl2jj/n4/fPOihPjwvfFnnjOaQvs9PSpF33d+396LASZ3IID/4UP4pf9eOMXw82ccoUUUHX6MfBWyBDvARCrdPmerUwKwW+lBIAe1dsAAAA==',
+            label: 'Image Rotate',
+            labelCfg: {
+              position: 'right'
+            }
+          },
+          {
+            id: 'node4',
+            x: 300,
+            y: 300,
+            type: 'rect',
+            label: 'No Animation',
+            labelCfg: {
+              position: 'bottom'
+            }
+          }
+        ],
+        edges: [
+          {
+            source: 'node1',
+            target: 'node2'
+          },
+          {
+            source: 'node3',
+            target: 'node2'
+          },
+          {
+            source: 'node2',
+            target: 'node4'
+          }
+        ]
+      }
+
+      // Scale Animation
+      G6.registerNode(
+        'circle-animate',
+        {
+          afterDraw(cfg, group) {
+            const shape = group.get('children')[0]
+            shape.animate(
+              (ratio) => {
+                const diff = ratio <= 0.5 ? ratio * 10 : (1 - ratio) * 10
+                return {
+                  r: cfg.size / 2 + diff
+                }
+              },
+              {
+                repeat: true,
+                duration: 3000,
+                easing: 'easeCubic'
+              }
+            )
+          }
+        },
+        'circle'
+      )
+
+      // Background Animation
+      G6.registerNode(
+        'background-animate',
+        {
+          afterDraw(cfg, group) {
+            const r = cfg.size / 2
+            const back1 = group.addShape('circle', {
+              zIndex: -3,
+              attrs: {
+                x: 0,
+                y: 0,
+                r,
+                fill: cfg.color,
+                opacity: 0.6
+              },
+              name: 'back1-shape'
+            })
+            const back2 = group.addShape('circle', {
+              zIndex: -2,
+              attrs: {
+                x: 0,
+                y: 0,
+                r,
+                fill: cfg.color,
+                opacity: 0.6
+              },
+              name: 'back2-shape'
+            })
+            const back3 = group.addShape('circle', {
+              zIndex: -1,
+              attrs: {
+                x: 0,
+                y: 0,
+                r,
+                fill: cfg.color,
+                opacity: 0.6
+              },
+              name: 'back3-shape'
+            })
+            group.sort() // Sort according to the zIndex
+            back1.animate(
+              {
+                // Magnifying and disappearing
+                r: r + 10,
+                opacity: 0.1
+              },
+              {
+                duration: 3000,
+                easing: 'easeCubic',
+                delay: 0,
+                repeat: true // repeat
+              }
+            ) // no delay
+            back2.animate(
+              {
+                // Magnifying and disappearing
+                r: r + 10,
+                opacity: 0.1
+              },
+              {
+                duration: 3000,
+                easing: 'easeCubic',
+                delay: 1000,
+                repeat: true // repeat
+              }
+            ) // 1s delay
+            back3.animate(
+              {
+                // Magnifying and disappearing
+                r: r + 10,
+                opacity: 0.1
+              },
+              {
+                duration: 3000,
+                easing: 'easeCubic',
+                delay: 2000,
+                repeat: true // repeat
+              }
+            ) // 3s delay
+          }
+        },
+        'circle'
+      )
+
+      // Image animation
+      G6.registerNode(
+        'inner-animate',
+        {
+          afterDraw(cfg, group) {
+            const size = cfg.size
+            const width = size[0] - 12
+            const height = size[1] - 12
+            const image = group.addShape('image', {
+              attrs: {
+                x: -width / 2,
+                y: -height / 2,
+                width,
+                height,
+                img: cfg.img
+              },
+              name: 'image-shape'
+            })
+            image.animate(
+              (ratio) => {
+                const toMatrix = Util.transform([1, 0, 0, 0, 1, 0, 0, 0, 1], [['r', ratio * Math.PI * 2]])
+                return {
+                  matrix: toMatrix
+                }
+              },
+              {
+                repeat: true,
+                duration: 3000,
+                easing: 'easeCubic'
+              }
+            )
+          }
+        },
+        'rect'
+      )
+
+      const container = document.getElementById('g6-topology')
+      const width = container.scrollWidth
+      const height = container.scrollHeight || 500
+      const graph = new G6.Graph({
+        container: 'g6-topology',
+        width,
+        height,
+        defaultNode: {
+          style: {
+            fill: '#DEE9FF',
+            stroke: '#5B8FF9'
+          }
+        },
+        defaultEdge: {
+          style: {
+            lineWidth: 1,
+            stroke: '#b5b5b5'
+          }
+        }
+      })
+
+      graph.data(data)
+      graph.render()
+
+      if (typeof window !== 'undefined') {
+        window.onresize = () => {
+          if (!graph || graph.get('destroyed')) return
+          if (!container || !container.scrollWidth || !container.scrollHeight) {
+            return
+          }
+          graph.changeSize(container.scrollWidth, container.scrollHeight)
+        }
+      }
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import '@/styles/variables.scss';
+@import '@/styles/mixin.scss';
+.container {
+  @include flex(flex-start, center, column);
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  #vis-topology {
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 800px;
+    height: 500px;
+    border: 1px solid lightblue;
+  }
+  #g6-topology {
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 800px;
+    height: 500px;
+    border: 1px solid lightsalmon;
+  }
+}
+</style>

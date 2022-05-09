@@ -1,0 +1,753 @@
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+.text-bold {
+  font-weight: 500;
+}
+.paragraph {
+  text-indent: 2em;
+}
+.indent-title {
+  margin-left: 80px !important;
+  width: calc(100% - 80px) !important;
+}
+.main-content-style {
+  margin: 18px 0;
+  width: 100%;
+  line-height: 28px;
+  font-size: 18px;
+  font-weight: 400;
+}
+.text-blue {
+  color: #386FFF;
+}
+.contents-text {
+  line-height: 32px;
+  font-size: 16px;
+}
+table {
+  width: 100%;
+}
+.table-head-row {
+  height: 40px;
+  background-color: #EDEDF2;
+}
+.table-body-row {
+  height: 40px;
+}
+.per8 {
+  width: 8%;
+}
+.per10 {
+  width: 10%;
+}
+.per20 {
+  width: 20%;
+}
+.per25 {
+  width: 25%;
+}
+.per30 {
+  width: 30%;
+}
+.common-page {
+  margin-bottom: 15px;
+  position: relative;
+  background: #ffffff;
+}
+.content {
+  width: calc(100% - 80px);
+  padding: 104px 40px 80px 40px;
+}
+.page-header {
+  width: 100%;
+  height: 72px;
+  background: url("../img/header.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+}
+.page-header-logo {
+  width: 180px;
+  height: 48px;
+  background: url("../img/logo.png") no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  top: 12px;
+  left: 40px;
+}
+
+/* 封面 */
+.report-img {
+  width: 100%;
+  height: 100%;
+  background-size: 100% 100% !important;
+}
+.report-cover {
+  height: 1754px;
+}
+.cover-inner {
+  background: url("../img/cover-bg.jpg") no-repeat;
+  position: relative;
+}
+.cover-header {
+  padding: 100px 0 0 80px;
+}
+.company-logo {
+  width: 320px;
+  height: 88px;
+}
+.cover-body {
+  margin-top: 360px;
+}
+.cover-title {
+  font-weight: 700;
+  font-size: 64px;
+}
+.color-bar {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  height: 8px;
+}
+.bar-left {
+  width: 240px;
+  background: #31AFDB;
+}
+.bar-right {
+  width: 388px;
+  background: #1B6EC9;
+}
+.cover-task-name {
+  margin-top: 40px;
+  font-weight: 400;
+  font-size: 40px;
+}
+.cover-foot {
+  margin-top: 832px;
+}
+.company, .create-time {
+  font-size: 28px;
+}
+.create-time {
+  margin-top: 12px;
+}
+.cover-qrcode {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+}
+
+/* 概要 */
+.paragraph-title {
+  margin: 80px 0 16px 0;
+  padding: 0 16px;
+  width: 320px;
+  height: 40px;
+  line-height: 40px;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  background: #386FFF;
+  border-radius: 0 20px 20px 0;
+}
+.paragraph-title > span {
+  color: #ffffff;
+  font-weight: 300;
+}
+.paragraph-title:first-child {
+  margin-top: 0;
+}
+
+/* 目录 */
+.report-contents-title {
+  margin-bottom: 80px;
+  line-height: 40px;
+  font-size: 28px;
+  font-weight: 700;
+}
+.report-contents {
+  padding: 0 80px;
+}
+.contents-item {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 26px;
+  font-size: 16px;
+  font-weight: 400;
+  text-indent: 1em;
+}
+.contents-title {
+  font-size: 18px;
+  font-weight: 700;
+  text-indent: 0;
+}
+
+/* 测试概要 */
+.content-color-bar {
+  margin: 4px 0 16px 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(46,165,205,0.28) 0%, rgba(46,165,205,0.28) 0%, #0A489C 47%, rgba(10,72,156,0.20) 99%, rgba(10,72,156,0.20) 100%);
+}
+.test-action-title {
+  margin: 32px 0 16px 0;
+  padding: 0 16px;
+  width: 400px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  background: #386FFF;
+}
+.att-risk-level {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.risk-level {
+  width: 672px;
+  height: 300px;
+  background: url("../img/risk-level.png") no-repeat;
+}
+.att-estimate {
+  width: 448px;
+  height: 136px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  box-sizing: border-box;
+  border: 2px solid #EDEDF2;
+}
+.att-estimate-text {
+  padding-left: 24px;
+  width: 420px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.att-estimate-head {
+  border-radius: 4px 4px 0px 0px;
+  background: #EDEDF2;
+}
+.att-estimate-body {
+  margin-top: 14px;
+}
+.att-estimate-bold {
+  margin-right: 30px;
+  color: #FF910B;
+  font-size: 18px;
+  font-weight: 700;
+}
+.att-estimate-normal {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* 执行概要 */
+.test-action-row {
+  margin-bottom: 16px;
+  width: 100%;
+  height: 160px;
+  display: flex;
+  justify-content: space-between;
+}
+.test-action-summary {
+  width: 376px;
+  height: 160px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  border: 2px solid #EDEDF2;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.summary-img {
+  width: 56px;
+  height: 56px;
+}
+.summary-info {
+  margin-left: 24px;
+  width: 100px;
+  height: 60px;
+}
+.summary-info-num {
+  line-height: 36px;
+  font-size: 24px;
+  font-weight: 700;
+}
+.summary-info-content {
+  line-height: 24px;
+  color: #9E9E9E;
+  font-size: 16px;
+  font-weight: 400;
+}
+.test-action-main {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.test-action-chart {
+  width: 60%;
+  height: 344px;
+  position: relative;
+}
+#test-area {
+  width: 100%;
+  height: 100%;
+}
+.test-area-des {
+  position: absolute;
+  left: 41%;
+  top: 38%;
+  width: 130px;
+  height: 60px;
+  text-align: center;
+}
+.test-area-des > p {
+  margin: 0;
+  color: #ffffff;
+}
+.test-area-des > p:nth-child(1) {
+  font-size: 24px;
+}
+.test-area-des > p:nth-child(2) {
+  font-size: 16px;
+}
+.test-action-text {
+  width: 40%;
+  line-height: 28px;
+  font-size: 18px;
+  font-weight: 400;
+}
+/* 1.2 风险趋势 */
+#risk-tend {
+  width: 100%;
+  height: 380px;
+}
+
+/* 2.1 安全控制风险分布 */
+#safety-control {
+  margin-bottom: 32px;
+  width: 100%;
+  height: 264px;
+}
+
+/* 2.2 区域风险分布 */
+.area-risk-chart {
+  margin-bottom: 40px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.area-risk-chart-form {
+  position: relative;
+  width: 50%;
+  height: 344px;
+}
+.area-risk-chart-item {
+  width: 100%;
+  height: 100%;
+}
+.chart-item-des {
+  position: absolute;
+  left: 40%;
+  top: 38%;
+  width: 120px;
+  height: 60px;
+  text-align: center;
+}
+.chart-item-des > p {
+  margin: 0;
+  color: #ffffff;
+}
+.chart-item-des > p:nth-child(1) {
+  font-size: 24px;
+}
+.chart-item-des > p:nth-child(2) {
+  font-size: 16px;
+}
+
+/* 3.1 ATT风险视图 */
+.ATT-result {
+  margin: 0 80px;
+  width: calc(100% - 160px);
+  height: auto;
+  border-radius: 4px;
+  border: 2px solid #EDEDF2;
+}
+.ATT-result-row {
+  width: 100%;
+  height: 64px;
+  border-bottom: 1px solid #EDEDF2;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.ATT-result-row-left {
+  padding: 12px 40px;
+  margin-right: 112px;
+  width: 208px;
+  line-height: 22px;
+}
+.ATT-result-row-right {
+  margin: 26px 0;
+  width: 576px;
+  height: 12px;
+  display: flex;
+  flex-direction: row;
+}
+.ATT-result-red {
+  height: 100%;
+  background: #EC574D;
+  border-right: 2px solid #ffffff;
+  border-radius: 6px 0 0 6px;
+}
+.ATT-result-yellow {
+  height: 100%;
+  background: #FBD437;
+}
+.ATT-result-green {
+  height: 100%;
+  background: #4ECB73;
+  border-left: 2px solid #ffffff;
+  border-radius: 0 6px 6px 0;
+}
+.ATT-result-position {
+  position: relative;
+}
+.ATT-result-num {
+  position: absolute;
+  bottom: -18px;
+  left: 32%;
+}
+/* 3.2 黑客 */
+.hacker-row-name {
+  margin: 8px 24px;
+  width: 48px;
+  height: 48px;
+  line-height: 48px;
+  border-radius: 24px;
+  background: #386FFF;
+  font-size: 12px;
+  text-align: center;
+  color: #ffffff;
+}
+.hacker-row-left {
+  padding: 12px 0;
+  margin-right: 96px;
+  width: 208px;
+  line-height: 22px;
+}
+.hacker-row-right {
+  margin: 26px 0;
+  width: 576px;
+  height: 12px;
+  display: flex;
+  flex-direction: row;
+}
+.table-margin {
+  margin-bottom: 32px;
+}
+/* 4 剧本 */
+.script-test {
+  margin-bottom: 32px;
+  width: 100%;
+  height: auto;
+  border: 2px solid #EDEDF2;
+  border-radius: 8px;
+}
+.script-test-head {
+  padding: 0 32px;
+  width: calc(100% - 64px);
+  height: 40px;
+  background: #EDEDF2;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.script-test-title {
+  font-size: 16px;
+  font-weight: 500;
+}
+.script-test-content {
+  padding: 16px 32px;
+}
+.script-test-foot {
+  margin-bottom: 24px;
+  padding: 0 32px;
+  width: calc(100% - 32px);
+  height: 280px;
+  display: flex;
+  flex-direction: row;
+}
+.script-foot-item {
+  margin-right: 24px;
+  width: 536px;
+  height: 280px;
+}
+.script-foot-title {
+  padding: 0 16px;
+  width: calc(100% - 32px);
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  font-weight: 500;
+}
+.script-foot-main {
+  padding: 0 16px;
+  width: calc(100% - 32px);
+  height: 240px;
+  border: 2px solid #EDEDF2;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.script-foot-main > .script-foot-row:nth-last-child(1) {
+  border: none;
+}
+.script-foot-row {
+  width: 100%;
+  border-bottom: 1px solid #EDEDF2;
+  display: flex;
+  flex-direction: row;
+}
+.short-row-head {
+  font-size: 16px;
+  font-weight: 500;
+}
+.short-row {
+  height: 48px;
+  line-height: 48px;
+  position: relative;
+}
+.short-row-mid {
+  position: absolute;
+  top: 0;
+  left: 45%;
+}
+.short-row > div:nth-child(1) {
+  width: 120px;
+  font-weight: 500;
+}
+.short-row > div:nth-child(2) {
+  width: 208px;
+}
+.short-row > div:nth-child(3) {
+  width: 208px;
+}
+.long-row {
+  height: 80px;
+  line-height: 80px;
+}
+.long-row > div:nth-child(1) {
+  width: 120px;
+  font-weight: 500;
+}
+.long-row > div:nth-child(2) {
+  width: 416px;
+}
+.script-steps-row {
+  padding: 0 16px;
+  width: calc(100% - 32px);
+  min-height: 48px;
+  word-break: break-word;
+  border-bottom: 1px solid #EDEDF2;
+  display: flex;
+  flex-direction: row;
+}
+.script-steps-row:nth-last-child(1) {
+  border-bottom: none;
+}
+.script-steps-row >div {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.script-steps-row >div:nth-child(1) {
+  width: 20%;
+}
+.script-steps-row >div:nth-child(2) {
+  width: 15%;
+}
+.script-steps-row >div:nth-child(3) {
+  width: 15%;
+}
+.script-steps-row >div:nth-child(3) {
+  width: 50%;
+}
+.risk-adv-row >div:nth-child(1) {
+  width: 200px;
+}
+.risk-adv-row >div:nth-child(2) {
+  width: calc(100% - 200px);
+  justify-content: flex-start;
+}
+
+/* 5 安全防护设备 */
+/* 6 */
+
+/* 导航 */
+.position-fixed {
+  position: fixed !important;
+}
+.position-relative {
+  position: relative;
+}
+.position-absolute {
+  position: absolute;
+}
+.nav-floor-container {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  padding: 20px;
+  max-width: 400px;
+  background-color: #fff;
+}
+
+.nav-floor-container h2 {
+  position: relative;
+  margin: 0;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.nav-floor > h2::before {
+  display: block;
+  position: absolute;
+  content: "";
+  left: -20px;
+  top: 0;
+  bottom: -12px;
+  border-left: 1px dashed #888;
+}
+
+.nav-floor > h2:first-child::before {
+  top: 11px;
+}
+
+.nav-floor > h2:last-child::before {
+  bottom: 11px;
+  height: 0;
+}
+
+.nav-floor > h2:first-child:last-child::before {
+  height: 0;
+}
+
+.nav-floor > h2:first-child:last-child > a::before {
+  display: none;
+}
+
+.sub-nav-floor-container {
+  position: relative;
+  margin: 0;
+  padding-left: 20px;
+  list-style: none;
+}
+
+.sub-nav-floor-container > li {
+  position: relative;
+}
+
+.sub-nav-floor-container > li::before {
+  display: block;
+  position: absolute;
+  content: "";
+  top: 0;
+  bottom: 0;
+  left: -20px;
+  border-left: 1px dashed #888;
+}
+
+.sub-nav-floor-container > li:first-child:before {
+  bottom: 0;
+}
+
+.sub-nav-floor-container > li:last-child:before {
+  bottom: calc(100% - 11px);
+}
+
+
+.nav-floor-item {
+  position: relative;
+  display: block;
+  padding: 5px 0;
+  color: #000;
+}
+
+.nav-floor-item::before {
+  position: absolute;
+  content: "";
+  display: block;
+  width: 15px;
+  height: 0;
+  left: -18px;
+  top: 11px;
+  border-bottom: 1px dashed #888;
+}
+
+.nav-floor-item[data-expand]::after {
+  position: absolute;
+  left: -15px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  display: block;
+  width: 10px;
+  height: 10px;
+  line-height: 10px;
+  border: 1px solid #888;
+  content: "-";
+  font-size: 12px;
+  color: #888;
+  text-align: center;
+  background-color: #fff;
+}
+
+.nav-floor-item[data-expand="true"]::after {
+  content: "-";
+  line-height: 7px;
+}
+
+.nav-floor-item[data-expand="false"]::after {
+  content: "+";
+}
+
+[data-expand="false"] + .sub-nav-floor-container {
+  display: none;
+}
+
+[data-expand="true"] + .sub-nav-floor-container {
+  display: block;
+}
+
+.nav-floor-move-btn, .nav-floor-expand-btn {
+  cursor: pointer;
+  border: 1px solid #888;
+  background-color: #fff;
+}
+
+.nav-floor {
+  overflow: auto;
+  height: calc(100% - 24px);
+  padding-left: 20px;
+}

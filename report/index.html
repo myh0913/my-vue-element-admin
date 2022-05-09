@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title></title>
+  <link rel="shortcut icon" href="static/favicon.ico">
+  <link rel="stylesheet" href="static/css/index.css" />
+  <link rel="stylesheet" href="static/css/report.css" />
+  <script src="static/js/jquery.min.js"></script>
+  <script src="static/js/vue.global.prod.js"></script>
+  <script src="static/js/echarts.js"></script>
+  <script src="static/js/data.js"></script>
+  <script type="x-template" id="page-header">
+    <div class="page-header">
+      <div class="page-header-logo"></div>
+    </div>
+  </script>
+  <script type="x-template" id="action-info">
+    <div class="test-action-summary">
+      <div class="summary-img">
+        <img :src="img" alt=""/>
+      </div>
+      <div class="summary-info">
+        <div class="summary-info-num">{{ num }}</div>
+        <div class="summary-info-content">{{ content }}</div>
+      </div>
+    </div>
+  </script>
+</head>
+
+<body size="a4">
+  <!-- 封面 -->
+  <div class="common-page report-cover">
+    <div class="cover-inner report-img">
+      <header class="cover-header">
+        <img class="company-logo" src="static/img/logo.png" alt="" />
+      </header>
+      <section class="cover-body">
+        <h1 class="text-center cover-title">攻击模拟测试报告</h1>
+        <div class="color-bar">
+          <div class="bar-left"></div>
+          <div class="bar-right"></div>
+        </div>
+        <div class="text-center cover-task-name">{{test_name}}</div>
+      </section>
+      <section class="cover-foot">
+        <div class="text-center company">北京墨云科技有限公司</div>
+        <div class="text-center create-time">{{test_name}}</div>
+      </section>
+      <section class="cover-qrcode">
+        <img class="qrcode" src="static/img/qrcode.png" alt="" />
+      </section>
+    </div>
+  </div>
+  <!-- 概要 -->
+  <div class="common-page summary">
+    <page-header></page-header>
+    <div class="content">
+      <div class="paragraph-title">— 说明 — &nbsp;&nbsp;<span>Instructions</span></div>
+      <div class="contents-text paragraph">这是一份基于本评估计划测试评估结果输出的总结报告。其中包含的信息旨在了解本次入侵和攻击模拟评估中的整体风险状态、安全态势和分布情况，以及现有网络安全防护系统抵御所选择的威胁场景的能力。</div>
+      <div class="paragraph-title">— 声明 — &nbsp;&nbsp;<span>The Statement</span></div>
+      <div class="contents-text paragraph">此报告包含客户重要敏感信息，未经北京墨云科技有限公司（以下简称墨云）或最终用户允许严禁复制、转发。</div>
+      <div class="contents-text paragraph">此报告中呈现的信息根据当时任务结果生成并未进行人工修改。基于漏洞及安全问题具有高时效性，在您查阅报告的同时原有环境可能已经发生变化，同理在您查阅报告时原有运行环境也可能会有新的问题被发现。</div>
+      <div class="contents-text paragraph">基于这种原因，您应该将此报告内容视为参考，其并不能完全准确描述您的系统、网络环境或者应用所面临的所有安全威胁。</div>
+      <div class="contents-text paragraph">在进行模拟攻击前，请您知悉执行计划可能会带来的影响，对此不应追究墨云的责任。</div>
+      <div class="paragraph-title">— 定义 — &nbsp;&nbsp;<span>Definition</span></div>
+      <div class="contents-text"><b>剧本：</b>剧本是模拟攻击活动或验证安全控制的脚本行为包。</div>
+      <div class="contents-text"><b>模拟器：</b>部署在网络中的端点设备或虚拟机上，作为攻击者或者被攻击者执行剧本的各种验证活动。</div>
+      <div class="contents-text"><b>结果：</b>在特定资产上执行的剧本实例。</div>
+      <div class="contents-text"><b>拦截：</b>当剧本执行的预期行为不成功时。此结果由模拟器和剧本执行决定。</div>
+      <div class="contents-text"><b>告警：</b>当在客户环境中的网络安全产品/系统日志中匹配到某个剧本实施的攻击时。此结果由本平台与网络安全产品/系统集成和日志采集情况决定。</div>
+      <div class="contents-text"><b>安全控制有效性：</b>客户环境中的网络安全产品/系统，或者AD域控内相关的安全防护策略等网络安全防护机制。</div>
+      <div class="contents-text"><b>MITRE ATT&CK框架：</b>以攻击方的视角，描述黑客在入侵时可能用到的入侵战术，入侵技术的框架，帮助防守方更好的理解、分析攻击方的意图、下一步攻击行为等，是组织机构内不同部门间共享信息、协同工作和构建必要检测与响应流程的统一分类方法。</div>
+    </div>
+  </div>
+  <!-- 目录 -->
+  <div class="common-page">
+    <page-header></page-header>
+    <div class="content">
+      <div class="report-contents-title text-center">目录</div>
+      <div class="report-contents">
+        <div class="contents-item contents-title"><a href="#cap1"><span>1.测试概况</span></a></div>
+        <div class="contents-item"><a href="#cap1.1"><span>1.1 执行概览</span></a></div>
+        <div class="contents-item"><a href="#cap1.2"><span>1.2 风险趋势</span></a></div>
+        <div class="contents-item contents-title"><a href="#cap2"><span>2.风险分布</span></a></div>
+        <div class="contents-item"><a href="#cap2.1"><span>2.1 安全控制风险分布</span></a></div>
+        <div class="contents-item"><a href="#cap2.2"><span>2.2 区域风险分布</span></a></div>
+        <div class="contents-item contents-title"><a href="#cap3"><span>3.风险专题试图</span></a></div>
+        <div class="contents-item"><a href="#cap3.1"><span>3.1 Mitre ATT&CK 风险视图</span></a></div>
+        <div class="contents-item"><a href="#cap3.2"><span>3.2 黑客组织风险视图</span></a></div>
+        <div class="contents-item contents-title"><a href="#cap4"><span>4.攻击剧本测试结果详情</span></a></div>
+        <div class="contents-item contents-title"><a href="#cap5"><span>5.安全防护设备</span></a></div>
+        <div class="contents-item contents-title"><a href="#cap6"><span>6.风险缓解建议</span></a></div>
+      </div>
+    </div>
+  </div>
+  <!-- 1 测试概要 -->
+  <!-- 1.1 执行概览 -->
+  <div class="common-page">
+    <page-header></page-header>
+    <div class="content">
+      <div class="contents-title" id="cap1">1. 测试概要</div>
+      <div class="content-color-bar"></div>
+      <div class="contents-item" id="cap1.1">1.1 执行概览</div>
+      <table>
+        <thead>
+          <tr class="table-head-row">
+            <th class="per30">计划名称</th>
+            <th class="per20">开始时间</th>
+            <th class="per20">结束时间</th>
+            <th class="per10">时区</th>
+            <th class="per10">计划状态</th>
+            <th class="per10">执行轮次</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="table-body-row">
+            <td class="per30">{{test_name}}</td>
+            <td class="per20">{{start_time}}</td>
+            <td class="per20">{{end_time}}</td>
+            <td class="per10">{{test_status}}</td>
+            <td class="per10">{{test_status}}</td>
+            <td class="per10">{{test_status}}</td>
+          </tr>
+        </tbody>
+      </table>
+    <div class="test-action-title">— 入侵与攻击模拟风险指数 —</div>
+    <div class="att-risk-level">
+      <div class="risk-level"></div>
+      <div class="att-estimate">
+        <div class="att-estimate-text att-estimate-head">本次入侵和攻击模拟评估</div>
+        <div class="att-estimate-text att-estimate-body">
+          系统安全等级：<span class="att-estimate-bold">{{test_name}}</span>
+          风险指数：<span class="att-estimate-bold">{{test_name}}</span>
+        </div>
+        <div class="att-estimate-text att-estimate-normal">[&nbsp;严重风险：80~100&nbsp;]&nbsp;[&nbsp;高风险：60~79&nbsp;]&nbsp;[&nbsp;中风险：30~59&nbsp;]&nbsp;[&nbsp;低风险：0~29&nbsp;]</div>
+      </div>
+    </div>
+    <div class="test-action-title">— 执行概要 —</div>
+    <div class="test-action-row">
+      <action-info img="static/img/area.png" :num="test_name" :content="test_name"></action-info>
+      <action-info img="static/img/book.png" :num="test_name" :content="test_name"></action-info>
+      <action-info img="static/img/moni.png" :num="test_name" :content="test_name"></action-info>
+    </div>
+    <div class="test-action-row">
+      <action-info img="static/img/intercept.png" :num="test_name" :content="test_name"></action-info>
+      <action-info img="static/img/bell.png" :num="test_name" :content="test_name"></action-info>
+      <action-info img="static/img/time.png" :num="test_name" :content="test_name"></action-info>
+    </div>
+    <div class="test-action-main">
+      <div class="test-action-chart">
+        <div id="test-area"></div>
+        <div class="test-area-des">
+          <p>{{test_name}}</p>
+          <p>测试区域</p>
+        </div>
+      </div>
+      <div class="test-action-text paragraph">
+        本次入侵和攻击模拟评估中，
+        使用了<span class="text-blue">{{test_name}}</span>个攻击剧本对<span class="text-blue">{{test_name}}</span>个网络区域开展模拟攻击，
+        其中被拦截的攻击行为<span class="text-blue">{{test_name}}</span>个，
+        占比为<span class="text-blue">{{test_name}}</span>，
+        未被拦截的攻击行为<span class="text-blue">{{test_name}}</span>个，
+        占比为<span class="text-blue">{{test_name}}</span>。
+        在未被拦截的攻击行为中，
+        被对应安全设备记录并告警的攻击行为<span class="text-blue">{{test_name}}</span>个，
+        占比为<span class="text-blue">{{test_name}}</span>，
+        未被告警的攻击行为<span class="text-blue">{{test_name}}</span>个，
+        占比为<span class="text-blue">{{test_name}}</span>。
+      </div>
+    </div>
+    </div>
+  </div>
+  <!-- 1.2 风险趋势 -->
+  <div class="common-page">
+    <page-header></page-header>
+    <div class="content">
+      <div class="contents-item" id="cap1.2">1.2 风险趋势</div>
+      <div id="risk-tend"></div>
+      <div class="main-content-style paragraph">
+        相比最近一次安全系统评估检测中，能够有效阻止的攻击行为<span class="text-blue">{{test_name}}</span>次，
+        系统整体的安全系数呈<span class="text-blue">{{test_name}}</span>趋势。
+      </div>
+    </div>
+  </div>
+  <!-- 2 风险分布 -->
+  <!-- 2.1 安全控制风险分布 -->
+  <div class="common-page">
+    <page-header></page-header>
+    <div class="content">
+      <div class="contents-title" id="cap2">2. 风险分布</div>
+      <div class="content-color-bar"></div>
+      <div class="contents-item" id="cap2.1">2.1 安全控制风险分布</div>
+      <div class="main-content-style paragraph">
+        本次安全系统测试评估中，使用了<span class="text-blue">{{test_name}}</span>个剧本，
+        对<span class="text-blue">{{test_name}}</span>种安全控制能力开展模拟攻击测试，测试结果统计如下。
+      </div>
+      <div id="safety-control"></div>
+      <table>
+        <thead>
+          <tr class="table-head-row">
+            <th class="per10">安全控制类型</th>
+            <th class="per10">安全设备</th>
+            <th class="per10">模拟器</th>
+            <th class="per20">攻击剧本</th>
+            <th class="per8">未拦截</th>
+            <th class="per8">告警</th>
+            <th class="per8">阻断</th>
+            <th class="per8">未执行</th>
+            <th class="per8">攻击成功率</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="table-body-row">
+            <td class="per10">{{test_name}}</td>
+            <td class="per10">{{test_name}}</td>
+            <td class="per10">{{test_name}}</td>
+            <td class="per20">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="test-action-title">— 安全控制能力测试结果 —</div>
+      <table>
+        <thead>
+          <tr class="table-head-row">
+            <th class="per8">序号</th>
+            <th class="per20">安全控制类别</th>
+            <th class="per20">剧本名称</th>
+            <th class="per8">测试结果</th>
+            <th class="per8">攻击者</th>
+            <th class="per8">被攻击者</th>
+            <th class="per20">所在区域</th>
+            <th class="per8">安全设备</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="i in 10" class="table-body-row">
+            <td class="per8">{{i}}</td>
+            <td class="per20">{{test_name}}</td>
+            <td class="per20">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per20">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- 2.2 区域风险分布 -->
+  <div class="common-page">
+    <page-header></page-header>
+    <div class="content">
+      <div class="contents-item" id="cap2.2">2.2 区域风险分布</div>
+      <div class="main-content-style paragraph">
+        本次检测共调用了<span class="text-blue">{{test_name}}</span>个模拟器，
+        <span class="text-blue">{{test_name}}</span>个模拟器的角色是攻击者，
+        <span class="text-blue">{{test_name}}</span>个模拟器的角色是被攻击者。
+        这些模拟器部署在<span class="text-blue">{{test_name}}</span>个不同的网络区域中。
+        共执行<span class="text-blue">{{test_name}}</span>个模拟攻击剧本对相关区域进行风险评估，
+        相关区域风险分布如下。
+      </div>
+      <div class="area-risk-chart">
+        <div v-for="item in test_arr" class="area-risk-chart-form">
+          <div :id="item.name" class="area-risk-chart-item"></div>
+          <div class="chart-item-des">
+            <p>{{item.name}}个模拟器</p>
+            <p>{{item.name}}</p>
+          </div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr class="table-head-row">
+            <th class="per10">网络区域</th>
+            <th class="per20">被攻击者</th>
+            <th class="per20">攻击剧本</th>
+            <th class="per10">未拦截</th>
+            <th class="per10">告警</th>
+            <th class="per10">阻断</th>
+            <th class="per10">未执行</th>
+            <th class="per10">安全设备</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="i in 10" class="table-body-row">
+            <td class="per10">{{test_name}}</td>
+            <td class="per20">{{test_name}}</td>
+            <td class="per20">{{test_name}}</td>
+            <td class="per10">{{test_name}}</td>
+            <td class="per10">{{test_name}}</td>
+            <td class="per10">{{test_name}}</td>
+            <td class="per10">{{test_name}}</td>
+            <td class="per10">{{test_name}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="test-action-title">— 安全区域测试结果 —</div>
+      <table>
+        <thead>
+          <tr class="table-head-row">
+            <th class="per10">序号</th>
+            <th class="per20">网络区域</th>
+            <th class="per20">剧本名称</th>
+            <th class="per10">测试结果</th>
+            <th class="per10">攻击者</th>
+            <th class="per10">被攻击者</th>
+            <th class="per20">安全设备</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="i in 10" class="table-body-row">
+            <td class="per10">{{i}}</td>
+            <td class="per20">{{test_name}}</td>
+            <td class="per20">{{test_name}}</td>
+            <td class="per10">{{test_name}}</td>
+            <td class="per10">{{test_name}}</td>
+            <td class="per10">{{test_name}}</td>
+            <td class="per20">{{test_name}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- 3 风险专题视图 -->
+  <!-- 3.1 Mitre ATT&CK 风险视图 -->
+  <div class="common-page">
+    <page-header></page-header>
+    <div class="content">
+      <div class="contents-title" id="cap3">3. 风险专题视图</div>
+      <div class="content-color-bar"></div>
+      <div class="contents-item" id="cap3.1">3.1 Mitre ATT&CK</div>
+      <div class="main-content-style paragraph">
+        本次安全系统测试评估中，
+        测试剧本涵盖MITRE ATT&CK的<span class="text-blue">{{test_name}}</span>个战术阶段，
+        <span class="text-blue">{{test_name}}</span>种技术手段。
+      </div>
+      <div class="main-content-style">MITRE ATT&CK测试结果热力图</div>
+      <img class="company-logo" src="static/img/qrcode.png" alt="" />
+      <div class="main-content-style indent-title">MITRE ATT&CK攻击战术阶段测试结果统计</div>
+      <div class="ATT-result">
+        <div v-for="i in 10" class="ATT-result-row">
+          <div class="ATT-result-row-left">
+            <div>{{test_name}}</div>
+            <div>{{test_name}}</div>
+          </div>
+          <div class="ATT-result-row-right">
+            <div class="ATT-result-red ATT-result-position" :style="'width:' + i + '%'"><div class="ATT-result-num">{{i}}%</div></div>
+            <div class="ATT-result-yellow ATT-result-position" :style="'width:' + i + '%'"><div class="ATT-result-num">{{i}}%</div></div>
+            <div class="ATT-result-green ATT-result-position" :style="'width:' + i + '%'"><div class="ATT-result-num">{{i}}%</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="test-action-title">— MITRE ATT&CK战术测试结果 —</div>
+      <table>
+        <thead>
+          <tr class="table-head-row">
+            <th class="per8">序号</th>
+            <th class="per10">攻击阶段</th>
+            <th class="per20">技术</th>
+            <th class="per20">剧本名称</th>
+            <th class="per8">测试结果</th>
+            <th class="per8">攻击者</th>
+            <th class="per8">被攻击者</th>
+            <th class="per10">所在区域</th>
+            <th class="per8">安全设备</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="i in 10" class="table-body-row">
+            <td class="per8">{{i}}</td>
+            <td class="per10">{{test_name}}</td>
+            <td class="per20">{{test_name}}</td>
+            <td class="per20">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per10">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- 3.2 黑客组织风险视图 -->
+  <div class="common-page">
+    <page-header></page-header>
+    <div class="content">
+      <div class="contents-item" id="cap3.2">3.2 黑客组织风险视图</div>
+      <div class="main-content-style paragraph">
+        本次安全系统测试评估中，
+        使用了<span class="text-blue">{{test_name}}</span>个剧本，
+        涉及<span class="text-blue">{{test_name}}</span>个黑客及APT组织。
+        涵盖<span class="text-blue">{{test_name}}</span>个恶意软件、蠕虫、木马攻击，
+        <span class="text-blue">{{test_name}}</span>个勒索软件攻击。
+      </div>
+      <div class="main-content-style indent-title">黑客组织---测试结果统计</div>
+      <div class="ATT-result">
+        <div v-for="i in 10" class="ATT-result-row">
+          <div class="hacker-row-name">{{test_name}}</div>
+          <div class="hacker-row-left">
+            <div>{{test_name}}</div>
+            <div>{{test_name}}</div>
+          </div>
+          <div class="hacker-row-right">
+            <div class="ATT-result-red ATT-result-position" :style="'width:' + i + '%'"><div class="ATT-result-num">{{i}}%</div></div>
+            <div class="ATT-result-yellow ATT-result-position" :style="'width:' + i + '%'"><div class="ATT-result-num">{{i}}%</div></div>
+            <div class="ATT-result-green ATT-result-position" :style="'width:' + i + '%'"><div class="ATT-result-num">{{i}}%</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="test-action-title">— 黑客组织测试结果 —</div>
+      <table>
+        <thead>
+          <tr class="table-head-row">
+            <th class="per8">序号</th>
+            <th class="per20">黑客组织</th>
+            <th class="per20">剧本名称</th>
+            <th class="per8">测试结果</th>
+            <th class="per8">攻击者</th>
+            <th class="per8">被攻击者</th>
+            <th class="per10">所在区域</th>
+            <th class="per8">安全设备</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="i in 10" class="table-body-row">
+            <td class="per8">{{i}}</td>
+            <td class="per20">{{test_name}}</td>
+            <td class="per20">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per10">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- 4 攻击剧本测试结果详情 -->
+  <div class="common-page">
+    <page-header></page-header>
+    <div class="content">
+      <div class="contents-title" id="cap4">4. 攻击剧本测试结果详情</div>
+      <div class="content-color-bar"></div>
+      <div class="test-action-title">— 安全系统测试评估剧本执行结果详情 —</div>
+      <table class="table-margin">
+        <thead>
+          <tr class="table-head-row">
+            <th class="per8">序号</th>
+            <th class="per20">测试结果</th>
+            <th class="per20">剧本名称</th>
+            <th class="per8">攻击阶段</th>
+            <th class="per8">攻击者</th>
+            <th class="per8">被攻击者</th>
+            <th class="per20">网络区域</th>
+            <th class="per8">安全设备</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="i in 10" class="table-body-row">
+            <td class="per8">{{i}}</td>
+            <td class="per20">{{test_name}}</td>
+            <td class="per20"><a :href="'#' + i + test_name">{{test_name}}</a></td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+            <td class="per20">{{test_name}}</td>
+            <td class="per8">{{test_name}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div v-for="i in 10" class="script-test" :id="i + test_name">
+        <div class="script-test-head">
+          <div class="script-test-title">{{i}}.&nbsp;{{test_name}}</div>
+          <div class="script-test-title">剧本测试结果: <span style="color:#EC574D">{{test_name}}</span></div>
+        </div>
+        <div class="script-test-content">{{test_name}}</div>
+        <div class="script-test-foot">
+          <div class="script-foot-item">
+            <div class="script-foot-title">执行概要</div>
+            <div class="script-foot-main">
+              <div class="script-foot-row short-row">
+                <div></div>
+                <div class="short-row-head">攻击者</div>
+                <div class="short-row-head">被攻击者</div>
+                <span class="short-row-mid">UDP</span>
+              </div>
+              <div class="script-foot-row short-row">
+                <div>操作系统</div>
+                <div>{{test_name}}</div>
+                <div>{{test_name}}</div>
+              </div>
+              <div class="script-foot-row short-row">
+                <div>IP</div>
+                <div>{{test_name}}</div>
+                <div>{{test_name}}</div>
+              </div>
+              <div class="script-foot-row short-row">
+                <div>模拟器</div>
+                <div>{{test_name}}</div>
+                <div>{{test_name}}</div>
+              </div>
+              <div class="script-foot-row short-row">
+                <div>端口</div>
+                <div>{{test_name}}</div>
+                <div>{{test_name}}</div>
+              </div>
+            </div>
+          </div>
+          <div class="script-foot-item">
+            <div class="script-foot-title">模拟信息</div>
+            <div class="script-foot-main">
+              <div class="script-foot-row long-row">
+                <div>安全控制类型</div>
+                <div>{{test_name}}</div>
+              </div>
+              <div class="script-foot-row long-row">
+                <div>攻击类型</div>
+                <div>{{test_name}}</div>
+              </div>
+              <div class="script-foot-row long-row">
+                <div>执行时间</div>
+                <div>{{test_name}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="contents-item">剧本攻击步骤</div>
+      <div class="script-test">
+        <div class="script-test-head">
+          <div class="script-test-title">步骤1</div>
+        </div>
+        <div class="script-steps-row">
+          <div class="text-bold">时间</div>
+          <div class="text-bold">行动</div>
+          <div class="text-bold">结果</div>
+          <div class="text-bold">参数</div>
+        </div>
+        <div class="script-steps-row">
+          <div>{{test_name}}</div>
+          <div>{{test_name}}</div>
+          <div>{{test_name}}</div>
+          <div>{{test_name}}</div>
+        </div>
+        <div class="script-steps-row">
+          <div>{{test_name}}</div>
+          <div>{{test_name}}</div>
+          <div>{{test_name}}</div>
+          <div>{{test_name}}</div>
+        </div>
+      </div>
+      <div class="script-test">
+        <div class="script-test-head">
+          <div class="script-test-title">步骤2</div>
+        </div>
+        <div class="script-steps-row">
+          <div class="text-bold">时间</div>
+          <div class="text-bold">行动</div>
+          <div class="text-bold">结果</div>
+          <div class="text-bold">参数</div>
+        </div>
+        <div class="script-steps-row">
+          <div>{{test_name}}</div>
+          <div>{{test_name}}</div>
+          <div>{{test_name}}</div>
+          <div>{{test_name}}</div>
+        </div>
+        <div class="script-steps-row">
+          <div>{{test_name}}</div>
+          <div>{{test_name}}</div>
+          <div>{{test_name}}</div>
+          <div>{{test_name}}</div>
+        </div>
+      </div>
+      <div class="contents-item">安全风险缓解建议</div>
+      <div class="script-test">
+        <div class="risk-adv-row script-steps-row">
+          <div>风险缓解建议1</div>
+          <div><a href="advice1">{{test_name}}</a></div>
+        </div>
+        <div class="risk-adv-row script-steps-row">
+          <div>风险缓解建议2</div>
+          <div><a href="advice2">{{test_name}}</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 5 安全防护设备 -->
+  <div class="common-page">
+    <page-header></page-header>
+    <div class="content">
+      <div class="contents-title" id="cap5">5. 安全防护设备</div>
+      <div class="content-color-bar"></div>
+      <table class="table-margin">
+        <thead>
+          <tr class="table-head-row">
+            <th class="per25">安全控制对象类型</th>
+            <th class="per25">厂商</th>
+            <th class="per25">产品</th>
+            <th class="per25">所属区域</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="i in 10" class="table-body-row">
+            <td class="per25">{{test_name}}</td>
+            <td class="per25">{{test_name}}</td>
+            <td class="per25">{{test_name}}</td>
+            <td class="per25">{{test_name}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- 6 风险缓解建议 -->
+  <div class="common-page">
+    <page-header></page-header>
+    <div class="content">
+      <div class="contents-title" id="cap6">6. 风险缓解建议</div>
+      <div class="content-color-bar"></div>
+      <div class="contents-item">根据本次安全系统测试评估结果，具体风险缓解建议如下：</div>
+      <div class="script-test" :id="advice1">
+        <div class="script-test-head">
+          <div class="script-test-title">1. 安装或验证高级端点安全技术</div>
+        </div>
+        <div class="script-test-content">{{test_name}}</div>
+      </div>
+      <div class="script-test" :id="advice2">
+        <div class="script-test-head">
+          <div class="script-test-title">2. 安装或验证反病毒(AV)工具</div>
+        </div>
+        <div class="script-test-content">{{test_name}}</div>
+      </div>
+    </div>
+  </div>
+  <!-- 导航 START-->
+  <div class="position-fixed user-select-none nav-floor-container" draggable="false">
+    <div class="position-relative d-inline-block overflow-hidden align-middle nav-floor-input-wrap">
+      <img src="static/img/icon/search.svg" alt="">
+      <input class="nav-floor-input"/>
+    </div>
+    <img class="position-absolute user-select-none nav-floor-expand-btn" style="top: 5px; right: -20px;" src="static/img/icon/arrow-left-right.svg" alt="">
+    <div class="position-relative nav-floor" draggable="false"></div>
+  </div>
+  <!-- 导航 END-->
+</body>
+
+<script>
+  const navs = [
+    {
+      title: '测试概况',
+      anchor: '#cap1',
+      children: [
+        {
+          title: '执行概览',
+          anchor: '#cap1.1'
+        },
+        {
+          title: '风险趋势',
+          anchor: '#cap1.2'
+        }
+      ]
+    },
+    {
+      title: '风险分布',
+      anchor: '#cap2',
+      children: [
+        {
+          title: '安全控制风险分布',
+          anchor: '#cap2.1'
+        },
+        {
+          title: '区域风险分布',
+          anchor: '#cap2.2'
+        }
+      ]
+    },
+    {
+      title: '风险专题视图',
+      anchor: '#cap3',
+      children: [
+        {
+          title: 'Mitre ATT&CK 风险视图',
+          anchor: '#cap3.1'
+        },
+        {
+          title: '黑客组织风险视图',
+          anchor: '#cap3.2'
+        }
+      ]
+    },
+    {
+      title: '攻击剧本测试结果详情',
+      anchor: '#cap4'
+    },
+    {
+      title: '安全防护设备',
+      anchor: '#cap5'
+    },
+    {
+      title: '风险缓解建议',
+      anchor: '#cap6'
+    }
+  ];
+  function renderSubNavs(subNavs) {
+    subNavs = subNavs || [];
+    let oSubNavWrap = document.createElement('ul');
+    oSubNavWrap.className = 'sub-nav-floor-container';
+    subNavs.forEach(subNav => {
+      if(subNav.enabled === false) return;
+      let oSubNav = document.createElement('li');
+      oSubNav.innerHTML = `
+      <a class="nav-floor-item" href="${subNav.anchor}" ${subNav.children ? 'data-expand="true"' : ''} draggable="false">${subNav.title}</a>`;
+      if(subNav.children) {
+        oSubNav.append(renderSubNavs(subNav.children));
+      }
+      oSubNavWrap.append(oSubNav);
+    });
+    return oSubNavWrap;
+  }
+  function renderNavFloor(navs = []) {
+    let frg = document.createDocumentFragment();
+    navs.forEach(nav => {
+      if(nav.enabled === false) return;
+      let oNav = document.createElement('h2');
+      oNav.innerHTML = `<a class="nav-floor-item" href="${nav.anchor}" ${nav.children ? 'data-expand="true"' : ''} draggable="false">${nav.title}</a>`;
+      if(nav.children) {
+        oNav.append(renderSubNavs(nav.children));
+      }
+      frg.append(oNav);
+    });
+    $('.nav-floor').html('').append(frg);
+    $('.nav-floor-item[data-expand]').on('click', (e) => {
+      let $target = $(e.target);
+      $target.attr('data-expand', $target.attr('data-expand') === 'true' ? 'false' : 'true');
+    });
+  }
+  function initDargEvent() {
+    let oNavFloorMoveBtn = $('.nav-floor-move-btn');
+    let oNavFloorContainer = $('.nav-floor-container');
+    let isDragging = false;
+    let left = 0,
+      top = 0;
+    let startX = 0,
+      startY = 0;
+    oNavFloorContainer.on('mousedown', (e) => {
+      isDragging = true;
+      startX = e.pageX;
+      startY = e.pageY;
+    });
+    $(window).on('mousemove', (e) => {
+      if(!isDragging) return;
+      let x = e.pageX,
+          y = e.pageY;
+      left += x - startX;
+      top += y - startY;
+      left = Math.max(left, 0);
+      top = Math.max(top, 0);
+      startX = x;
+      startY = y;
+      oNavFloorContainer.css('left', left).css('top', top);
+    })
+      .on('overout', () => {
+          isDragging = false;
+      })
+      .on('mouseup', () => {
+          isDragging = false;
+      })
+  }
+  function initExpandEvent() {
+    let isExpand = true;
+    let oExpandBtn = $('.nav-floor-expand-btn');
+    let oSearchInputWrap = $('.nav-floor-input-wrap');
+    let oNavFloorContainer = $('.nav-floor-container');
+    let oNavFloor = $('.position-relative');
+    oExpandBtn.on('click', (e) => {
+      isExpand = !isExpand;
+      if(isExpand) {
+        oNavFloorContainer.css('padding', '20px');
+        oSearchInputWrap.css('width', 'auto');
+        oNavFloor.show();
+      } else {
+        oNavFloorContainer.css('padding', '0');
+        oSearchInputWrap.css('width', '0px');
+        oNavFloor.hide();
+      }
+    }).on('mousedown', e => {
+      e.stopPropagation();
+    })
+  }
+  function initSearchEvent() {
+    $('.nav-floor-input').on('keyup', (e) => {
+      let search = e.target.value;
+      let navsCopy = JSON.parse(JSON.stringify(navs));
+      if(search !== '') {
+        navsCopy.forEach(nav => {
+          nav.enabled = isNavEnabled(nav);
+        })
+      }
+      renderNavFloor(navsCopy);
+      function isNavEnabled(nav) {
+        if(!nav) return false;
+        nav.enabled = nav.title.indexOf(search) !== -1;
+        if(nav.enabled) {
+          nav.title = nav.title.replaceAll(search, '<span style="background: yellow; color: red">' + search + '</span>')
+        }
+        if(nav.children) {
+          nav.children.forEach(subNav => {
+            let subNabEnabled = isNavEnabled(subNav);
+            nav.enabled = nav.enabled || subNabEnabled;
+          });
+        }
+        return nav.enabled;
+      }
+    })
+  }
+  $(window).load(() => {
+    renderNavFloor(navs);
+    initDargEvent();
+    initExpandEvent();
+    initSearchEvent();
+  })
+
+  const app = Vue.createApp({
+    data() {
+      return reportData; // static/js/data.js中存放reportData
+    },
+    mounted() {
+      this.initPieChart()
+      this.initLineChart()
+      this.initBarChart()
+      this.areaRiskChart()
+      document.title = reportData.test_name;
+    },
+    computed: {
+    },
+    methods: {
+      initPieChart() {
+        var chartDom = document.getElementById('test-area');
+        var pieChart = echarts.init(chartDom);
+        var option;
+        option = {
+          tooltip: {
+            trigger: 'item'
+          },
+          legend: {
+            bottom: '0%',
+            left: 'center',
+            icon: 'circle'
+          },
+          color: ['#3566E7','#4ECB73','#EC574D','#E6C232'],
+          series: [
+            {
+              type: 'pie',
+              radius: ['0%', '48%'],
+              center: ['50%', '45%'],
+              emptyCircleStyle: {
+                color: '#424A69'
+              }
+            },
+            {
+              type: 'pie',
+              radius: ['47%', '57%'],
+              center: ['50%', '45%'],
+              data: [
+                { value: 1048, name: 'Search Engine' },
+                { value: 735, name: 'Direct' },
+                { value: 580, name: 'Email' },
+                { value: 484, name: 'Union Ads' }
+              ],
+              label: {
+                show: false
+              },
+            },
+            {
+              type: 'pie',
+              radius: ['56%', '72%'],
+              center: ['50%', '45%'],
+              data: [
+                { value: 1048, name: 'Search Engine' },
+                { value: 735, name: 'Direct' },
+                { value: 580, name: 'Email' },
+                { value: 484, name: 'Union Ads' }
+              ],
+              itemStyle: {
+                opacity: 0.9
+              },
+              labelLine: {
+                length: 30,
+                length2: 0,
+                lineStyle: {
+                  type: 'dotted'
+                }
+              },
+              emphasis: {
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              }
+            },
+            {
+              type: 'pie',
+              radius: ['75%', '76%'],
+              center: ['50%', '45%'],
+              emptyCircleStyle: {
+                color: '#424A69',
+                opacity: 0.3
+              }
+            },
+            {
+              type: 'pie',
+              radius: ['79%', '80%'],
+              center: ['50%', '45%'],
+              emptyCircleStyle: {
+                color: '#424A69',
+                opacity: 0.3
+              }
+            }
+          ]
+        };
+        option && pieChart.setOption(option)
+      },
+      initLineChart() {
+        var chartDom = document.getElementById('risk-tend');
+        var lineChart = echarts.init(chartDom);
+        var option;
+        option = {
+          title: {
+            left: 'center',
+            text: '风险趋势折线图'
+          },
+          legend: {
+            bottom: '0%',
+            data: ['Email']
+          },
+          xAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [
+            {
+              name: 'Email',
+              data: [820, 932, 901, 934, 1290, 1330, 1320],
+              type: 'line',
+              smooth: true
+            }
+          ]
+        };
+        option && lineChart.setOption(option)
+      },
+      initBarChart() {
+        var chartDom = document.getElementById('safety-control');
+        var lineChart = echarts.init(chartDom);
+        var option;
+        option = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              // Use axis to trigger tooltip
+              type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+            }
+          },
+          legend: {
+            bottom: '0%'
+          },
+          color: ['#EC574D','#E6C232','#4ECB73','#3566E7'],
+          yAxis: {
+            show: false,
+            type: 'value'
+          },
+          xAxis: {
+            axisTick: false,
+            axisLine: {
+              lineStyle: {
+                width: 0
+              }
+            },
+            type: 'category',
+            data: ['端点安全', '横向移动安全', '数据防泄漏', '网站安全']
+          },
+          series: [
+            {
+              name: '未拦截',
+              type: 'bar',
+              barWidth: 50,
+              itemStyle: {
+                borderRadius: [0,0,2,2]
+              },
+              stack: 'total',
+              // label: {
+              //   show: true
+              // },
+              emphasis: {
+                focus: 'series'
+              },
+              data: [132, 101, 90, 230]
+            },
+            {
+              name: '告警',
+              type: 'bar',
+              barWidth: 50,
+              stack: 'total',
+              // label: {
+              //   show: true
+              // },
+              emphasis: {
+                focus: 'series'
+              },
+              data: [220, 182, 191, 310]
+            },
+            {
+              name: '阻断',
+              type: 'bar',
+              barWidth: 50,
+              stack: 'total',
+              // label: {
+              //   show: true
+              // },
+              emphasis: {
+                focus: 'series'
+              },
+              data: [150, 212, 330, 410]
+            },
+            {
+              name: '未执行',
+              type: 'bar',
+              barWidth: 50,
+              itemStyle: {
+                borderRadius: [2,2,0,0]
+              },
+              stack: 'total',
+              // label: {
+              //   show: true
+              // },
+              emphasis: {
+                focus: 'series'
+              },
+              data: [820, 901, 934, 1320]
+            }
+          ]
+        };
+        option && lineChart.setOption(option)
+      },
+      areaRiskChart() {
+        for (let i = 0; i < reportData.test_arr.length; i++) {
+          var chartDom = document.getElementById(reportData.test_arr[i]['name']);
+          var pieChart = echarts.init(chartDom);
+          var option;
+          option = {
+            tooltip: {
+              trigger: 'item'
+            },
+            legend: {
+              bottom: '0%',
+              left: 'center',
+              icon: 'circle'
+            },
+            color: ['#3566E7','#4ECB73','#EC574D','#E6C232'],
+            series: [
+              {
+                type: 'pie',
+                radius: ['0%', '48%'],
+                center: ['50%', '45%'],
+                emptyCircleStyle: {
+                  color: '#424A69'
+                }
+              },
+              {
+                type: 'pie',
+                radius: ['47%', '57%'],
+                center: ['50%', '45%'],
+                data: [
+                  { value: 1048, name: 'Search Engine' },
+                  { value: 735, name: 'Direct' },
+                  { value: 580, name: 'Email' },
+                  { value: 484, name: 'Union Ads' }
+                ],
+                label: {
+                  show: false
+                },
+              },
+              {
+                type: 'pie',
+                radius: ['56%', '72%'],
+                center: ['50%', '45%'],
+                data: [
+                  { value: 1048, name: 'Search Engine' },
+                  { value: 735, name: 'Direct' },
+                  { value: 580, name: 'Email' },
+                  { value: 484, name: 'Union Ads' }
+                ],
+                itemStyle: {
+                  opacity: 0.9
+                },
+                labelLine: {
+                  length: 30,
+                  length2: 0,
+                  lineStyle: {
+                    type: 'dotted'
+                  }
+                },
+                emphasis: {
+                  itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                  }
+                }
+              },
+              {
+                type: 'pie',
+                radius: ['75%', '76%'],
+                center: ['50%', '45%'],
+                emptyCircleStyle: {
+                  color: '#424A69',
+                  opacity: 0.3
+                }
+              },
+              {
+                type: 'pie',
+                radius: ['79%', '80%'],
+                center: ['50%', '45%'],
+                emptyCircleStyle: {
+                  color: '#424A69',
+                  opacity: 0.3
+                }
+              }
+            ]
+          };
+          option && pieChart.setOption(option)
+        }
+      }
+    }
+  });
+  app.component('page-header', {
+    template: '#page-header'
+  });
+  app.component('action-info', {
+    template: '#action-info',
+    props: ['img', 'num', 'content']
+  })
+  app.mount(document.body);
+</script>
+<script>
+
+
+</script>
+
+</html>
