@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link rel="shortcut icon" href="./static/favicon.ico">
+    <link rel="stylesheet" href="static/css/bootstrap.css" />
+    <link rel="stylesheet" href="static/css/index.css" />
+    <link rel="stylesheet" href="static/css/auc.css" />
+    <script src="static/js/vue.global.prod.js"></script>
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/echarts.min.js"></script>
+    <script src="static/js/data.js"></script>
+    <script type="x-template" id="c-vuln-detail">
+        <div class="risk-type-critical">
+            <h3>
+                <div class="py-2 mt-4 mb-5 left-top-second-badge risk-category-bg">
+                    <span class="badge badge-light rounded-lg">{{vulns.length}}</span>
+                    <small class="badge-text" id="critical-vul">{{title}}</small>
+                </div>
+            </h3>
+            <ul class="list-unstyled">
+                <li v-for="(vuln, i) in vulns" :key="i">
+                    <h3>
+                        <span class="badge badge-dark font-weight-bolder px-3 rounded-lg risk-category-bg">{{i+1}}</span>
+                        <span>{{vuln.name}}</span>
+                    </h3>
+                    <dl>
+                        <dt class="mt-4 mb-2 text-low">描述:</dt>
+                        <dd>
+                            {{vuln.describe}}
+                        </dd>
+
+                        <dt class="mt-4 mb-2 text-low">参考链接:</dt>
+                        <dd>
+                            <table class="table table-striped no-border">
+                                <thead>
+                                    <tr class="bg-secondary">
+                                        <th class="text-white">链接地址</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(ref, i) in vuln.refers" :key="i">
+                                        <td>
+                                            {{ref}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </dd>
+
+                        <!-- Vulnerability Solution START -->
+                        <dt class="mt-4 mb-2 text-low">脆弱点解决方案:</dt>
+                        <dd>
+                            {{vuln.solution}}
+                        </dd>
+
+                        <dt class="mt-4 mb-2 text-low">影响目标:</dt>
+                        <table class="table table-striped no-border">
+                            <thead>
+                                <tr class="bg-secondary">
+                                    <th class="text-white">序号</th>
+                                    <th class="text-white">目标地址</th>
+                                    <th class="text-white">参数</th>
+                                    <th class="text-white">验证情况</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr v-for="(target, i) in vuln.targets" :key="i">
+                                    <td class="text-nowrap">{{i+1}}</td>
+                                    <td>
+                                        {{target.target}}
+                                    </td>
+                                    <td>{{target.position}}</td>
+                                    <td v-if="target.verification === 1" style="color: red">已验证</td>
+                                    <td v-else>未验证</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </script>
+</head>
+
+<body size="a4">
+    <!-- 国内封面 START -->
+    <div class="container cover-container vb-cover-container mb-2">
+        <div class="cover-inner-container">
+            <header class="text-center">
+                <img class="company-logo" src="static/img/logo.png" alt="" />
+            </header>
+            <section class="task-low-container">
+                <p class="text-center cover-task-name">{{test_name}}</p>
+                <h1 class="text-center cover-title">渗透测试报告</h1>
+                <p class="text-center powered-low">Powered by Vackbot</p>
+            </section>
+
+            <section class="text-center cover-low">
+                <img class="small-bg" src="static/img/small-bg.png" alt="" />
+                <p class="company">北京墨云科技有限公司</p>
+                <p class="generate-time">{{generate_time}}</p>
+            </section>
+            <section class="text-right" id="qrcode">
+                <img class="qrcode" src="static/img/qrcode.png" alt="" />
+            </section>
+        </div>
+    </div>
+    <!-- 国内封面 END -->
+
+    <!-- 声明 START -->
+    <div class="container content-container statement-container">
+        <h2 id="statement">声明</h2>
+
+        <h3 class="py-2 left-top-second-badge risk-bgcolor-exploited">
+            <small class="badge-text">机密性</small>
+        </h3>
+        <section>
+            <p class="mb-2 text-indent-2em">
+                此报告包含客户重要敏感信息，未经北京墨云科技有限公司（以下简称墨云）或最终用户允许严禁复制、转发。
+            </p>
+        </section>
+
+        <h3 class="py-2 left-top-second-badge risk-bgcolor-exploited">
+            <small class="badge-text">免责声明</small>
+        </h3>
+        <section>
+            <p class="mb-2 text-indent-2em">
+                此报告中呈现的信息根据当时测试结果生成并未进行人工修改。基于脆弱点具有高时效性的原因，在您查阅报告的同时原有脆弱点环境可能已经发生变化，同理在您查阅报告时原有运行环境也可能会有新的脆弱点被发现。基于这种原因，您应该将此报告内容视为参考，其并不能百分百的准确描述您的系统、网络环境或者应用所面临的所有安全威胁。
+            </p>
+            <p class="mb-2 text-indent-2em">
+                在进行渗透测试前请您知悉由检测测试所带来的负面影响，因运行不当组件所带来的负面影响不应由墨云负责。
+            </p>
+        </section>
+    </div>
+    <!-- 声明 END -->
+    
+    <!-- 目录 START -->
+    <div class="container content-container statement-container">
+        <h2 id="statement">目录</h2>
+        <hr style="background-color:blue; height:3px; border:none;" />
+        <h3 >&nbsp;&nbsp;&nbsp;&nbsp;<a href="#summary"><small class="badge-text">执行概要</small></a></h3>
+        <hr />
+        <h3 >&nbsp;&nbsp;&nbsp;&nbsp;<a href="#penetration-risk-statistics"><small class="badge-text">影响统计</small></a></h3>
+        <hr />
+        <h3 >&nbsp;&nbsp;&nbsp;&nbsp;<a href="#config"><small class="badge-text">测试配置概况</small></a></h3>
+        <hr />
+        <h3 >&nbsp;&nbsp;&nbsp;&nbsp;<a href="#impact-detail"><small class="badge-text">影响详情</small></a></h3>
+        <hr />
+        <h3 >&nbsp;&nbsp;&nbsp;&nbsp;<a href="#vul"><small class="badge-text">脆弱点详情</small></a></h3>
+        <hr />
+
+    </div>
+    <!-- 目录 END -->
+
+    <!-- 执行概要 START -->
+    <div class="container content-container" id="summary">
+        <h2>执行概要</h2>
+        <p>
+            <span class="mr-3"> 系统版本: <strong>{{version}}</strong> </span>
+        </p>
+        <table class="table table-striped no-border">
+            <thead>
+                <tr class="bg-secondary">
+                    <th class="text-white align-middle">测试名称</th>
+                    <th class="text-white align-middle">开始时间</th>
+                    <th class="text-white align-middle">结束时间</th>
+                    <th class="text-white align-middle">测试状态</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{test_name}}</td>
+                    <td class="text-nowrap">{{start_time}}</td>
+                    <td class="text-nowrap">{{end_time}}</td>
+                    <td class="text-nowrap">{{test_status}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="row">
+            <div class="col-7">
+                <h3 class="my-5 d-flex flex-row justify-content-between" id="safe-index">
+                    <span> 测试安全指数 </span>
+                    <small class="health-score-color-2 health-score">
+                        策略: 建议最小得分不低于 60
+                    </small>
+                </h3>
+                <div class="position-relative mb-5">
+                    <div class="d-flex flex-row mt-4 health-score-bar-container">
+                        <div class="position-relative health-score-bgcolor-1">
+                            <div class="d-flex flex-column justify-content-between health-icon-wrap left">
+                                <div class="mb-2 health-icon-desc">严重</div>
+                                <div class="icon-demo">
+                                    <img src="static/img/icon/icn-sad-face.svg" alt="" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="health-score-bgcolor-2"></div>
+                        <div class="health-score-bgcolor-3"></div>
+                        <div class="health-score-bgcolor-4"></div>
+                        <div class="health-score-bgcolor-5">
+                            <div class="d-flex flex-column justify-content-between health-icon-wrap right">
+                                <div class="mb-2 health-icon-desc">健康</div>
+                                <div class="icon-demo">
+                                    <img src="static/img/icon/icn-happy-face.svg" alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="position-absolute d-flex flex-column health-indicator-container" style="left: 60%">
+                        <small>60</small>
+                        <div class="health-indicator">
+                            <div class="health-indicator-top"></div>
+                            <div class="health-indicator-center"></div>
+                            <div class="health-indicator-bottom"></div>
+                        </div>
+                    </div>
+
+
+                    <div class="d-flex flex-column justify-content-between position-absolute health-arrow-container"
+                        :style="{left: (7 + (100 - 7 * 2) * kpsi/100) + '%'}">
+                        <div id="health-arrow" class="health-arrow"></div>
+                        <div class="font-weight-bold health-score">{{kpsi}}</div>
+                    </div>
+                </div>
+
+                <p>
+                    本次评估测试安全指数为{{kpsi}}，绝对安全指数为100。测试安全指数根据攻击面密度、脆弱点转化率、风险转化率等多种维度进行计算所得。本次测试中被检测目标的安全指数为{{kpsi}}，您的系统安全等级为“{{riskLevel}}”(高风险&lt;60；60&lt;=一般&lt;85；安全&gt;=85)。每个目标的脆弱点概况可以在“目标详情”章节进行查看。（目标详情可进行跳转）
+                </p>
+                <p>
+                    在本次测试过程中成功获取到了{{risk_number}}个渗透成果，这{{risk_number}}个风险至关重要，需要立即予以关注。这意味着真实的黑客也可以轻松对这些目标进行渗透攻击。
+                </p>
+
+                <p>
+                    渗透风险数量： {{risk_number}}, 占比详情：云访问密钥{{cloudKeyRate}}代码仓库问题{{codeStoreRate}}，被控制容器{{containerRate}}，被控制主机{{controlledHostRate}}，获取的凭证{{credentialRate}}，泄漏的数据库{{databaseRate}}，泄漏的敏感信息{{fileRate}}，泄漏的敏感信息{{sensInfoRate}}。
+                </p>
+
+                <h3 class="my-5 exploit-pie-header" id="penetration-risk-statistics">
+                    影响统计
+                </h3>
+
+                <div id="exploit-pie" class="exploit-pie"></div>
+            </div>
+            <div class="col-5">
+                <h3 class="my-5" id="risk-evalute-statistics">测试统计</h3>
+
+                <div class="position-relative d-flex flex-row justify-content-between bubble-container">
+                    <div class="d-flex flex-column left-bubble-wrap">
+                        <h4>渗透风险</h4>
+
+                        <div class="d-flex align-items-center left-bubble-container">
+                            <div
+                                class="d-flex flex-column justify-content-center align-items-center left-bubble risk-bgcolor-exploited">
+                                <p class="my-0 bubble-text">风险数</p>
+
+                                <p class="display-3 mb-2 font-weight-bold bubble-text">{{risk_number}}</p>
+                                <p class="my-0 bubble-text"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="position-absolute bg-secondary split-line"></div>
+                    <div class="d-flex flex-column align-items-center right-bubble-wrap">
+                        <h4 class="right-bubble-title">脆弱点</h4>
+
+                        <div class="d-flex flex-column justify-content-center right-bubble-container">
+                            <!-- 无数据时添加 no-data-bubble 类名 -->
+
+                            <div
+                                class="top-bubble-container d-flex flex-row justify-content-between align-items-center">
+                                <div
+                                    class="d-flex flex-column justify-content-center align-items-center critical-vul-bubble risk-bgcolor-critical">
+                                    <p class="my-0 bubble-text">严重</p>
+
+                                    <p class="display-4 mb-2 font-weight-bold bubble-text">
+                                        {{serious_vuln_number}}
+                                    </p>
+                                </div>
+                                <div
+                                    class="d-flex flex-column justify-content-center align-items-center high-vul-bubble risk-bgcolor-high">
+                                    <p class="my-0 pt-2 bubble-text">高危</p>
+
+                                    <p class="display-4 mb-2 font-weight-bold bubble-text">
+                                        {{high_vuln_numberr}}
+                                    </p>
+                                </div>
+                            </div>
+                            <div
+                                class="bottom-bubble-container d-flex flex-row justify-content-between align-items-center">
+                                <div
+                                    class="d-flex flex-column justify-content-center align-items-center medium-vul-bubble risk-bgcolor-medium">
+                                    <p class="my-0 bubble-text">中危</p>
+
+                                    <p class="display-4 mb-2 font-weight-bold bubble-text">
+                                        {{medium_vuln_number}}
+                                    </p>
+                                </div>
+                                <div
+                                    class="d-flex flex-column justify-content-center align-items-center low-vul-bubble risk-bgcolor-low">
+                                    <p class="my-0 bubble-text">低危</p>
+
+                                    <p class="display-4 mb-2 font-weight-bold bubble-text">
+                                        {{low_vuln_number}}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="table table-striped mt-5">
+                    <tbody>
+                        <tr>
+                            <td class="border-0">主机数量：</td>
+                            <td class="border-0 text-right">
+                                <strong>{{host_number}}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border-0">端口数量：</td>
+                            <td class="border-0 text-right">
+                                <strong>{{port_number}}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border-0">域名数量：</td>
+                            <td class="border-0 text-right">
+                                <strong>{{domain_number}}</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="border-0">网站数量：</td>
+                            <td class="border-0 text-right">
+                                <strong>{{site_number}}</strong>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="jumbotron px-4 py-3">
+                    <h5 class="mb-3 font-weight-bold health-and-risk-chart-tips">
+                        测试脆弱点情况说明
+                    </h5>
+                    <div>
+                        在本次渗透测试中发现:
+                        {{serious_vuln_number}}个严重脆弱点
+                        {{high_vuln_numberr}}个高危脆弱点
+                        {{medium_vuln_number}}个中危脆弱点
+                        {{low_vuln_number}}个低危脆弱点
+                        这些脆弱点存在被黑客发现和利用的可能，请尽快修补。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 执行概要 END -->
+
+    <!-- 测试配置概况 at a glance START -->
+    <div class="container content-container" id="config">
+        <h2>测试配置概况</h2>
+
+        <table class="table table-striped no-border">
+            <thead>
+                <tr class="bg-secondary">
+                    <th class="align-middle">
+                        <div class="mw-135 text-white">测试名称</div>
+                    </th>
+                    <th class="align-middle">
+                        <div class="mw-120 text-white">测试目标</div>
+                    </th>
+                    <th class="align-middle">
+                        <div class="mw-120 text-white">排除目标</div>
+                    </th>
+                    <th class="align-middle">
+                        <div class="mw-150 text-white">端口类型</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{configuration.test_name}}</td>
+                    <td class="text-nowrap">
+                        <div v-for="(target, i) in configuration.test_target" :key="i">{{target}}</div>
+                    </td>
+                    <td class="text-nowrap">
+                        <div v-for="(target, i) in configuration.exclude_target" :key="i">{{target}}</div>
+                    </td>
+                    <td class="text-nowrap">{{configuration.port_type}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-striped no-border f-plugin-table">
+            <thead>
+                <tr class="bg-secondary">
+                    <th class="text-white">密码爆破</th>
+                    <th class="text-white">其他爆破</th>
+                    <th class="text-white">可能造成危害的检测</th>
+                    <th class="text-white">中间人攻击</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <ul class="list-unstyled">
+                            <li :class="{active: burst.status === 1}"
+                                v-for="(burst, i) in configuration.module_config.password_burst" :key="i">
+                                <span>{{burst.name}}</span>
+                            </li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="list-unstyled">
+                            <li :class="{active: burst.status === 1}"
+                                v-for="(burst, i) in configuration.module_config.other_burst" :key="i">
+                                <span>{{burst.name}}</span>
+                            </li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="list-unstyled">
+                            <li :class="{active: exp.status === 1}"
+                                v-for="(exp, i) in configuration.module_config.cause_harm_exploit" :key="i">
+                                <span>{{exp.name}}</span>
+                            </li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="list-unstyled">
+                            <li :class="{active: attack.status === 1}"
+                                v-for="(attack, i) in configuration.module_config.middle_attack" :key="i">
+                                <span>{{attack.name}}</span>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-striped no-border">
+            <thead>
+                <tr class="bg-secondary">
+                    <th class="align-middle">
+                        <div class="mw-135 text-white">公司域名配置</div>
+                    </th>
+                    <th class="align-middle">
+                        <div class="mw-120 text-white">Git账号配置</div>
+                    </th>
+                    <th class="align-middle">
+                        <div class="mw-150 text-white">其他账号</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div v-for="(domain, i) in configuration.other_config.company_domains" :key="i">{{domain}}</div>
+                    </td>
+                    <td>
+                        <div v-for="(account, i) in configuration.other_config.git_accounts" :key="i">{{account}}</div>
+                    </td>
+                    <td>
+                        <div v-for="(account, i) in configuration.other_config.other_accounts" :key="i">
+                            {{account.username}}，{{account.password}}</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- 测试配置概况 at a glance END -->
+
+    <!-- 影响详情 START -->
+    <div class="container content-container" id="impact-detail">
+        <h2>影响详情</h2>
+        <div class="risk-type-critical" v-for="(impactDetail, i) in impactDetails" :key="i">
+            <h3>
+                <div class="py-2 mt-4 mb-5 left-top-second-badge risk-category-bg">
+                    <span class="badge badge-light rounded-lg">{{impactDetail.targets.length}}</span>
+                    <small class="badge-text" id="critical-vul">{{impactDetail.name}}</small>
+                </div>
+            </h3>
+            <ul class="list-unstyled">
+                <li>
+                    <dl>
+                        <dt class="mt-4 mb-2 text-low">影响描述:</dt>
+                        <dd>
+                            <p>{{impactDetail.describe}}</p>
+                        </dd>
+
+                        <dt class="mt-4 mb-2 text-low">受影响目标:</dt>
+                        <dd>
+                            <table class="table table-active"
+                                v-for="(targetDetail, i) in impactDetail.targets" :key="i">
+                                <tbody>
+                                    <tr v-for="(method, j) in targetDetail.methods">
+                                        <td class="align-middle" :rowspan="targetDetail.methods.length" v-if="j === 0">
+                                            {{targetDetail.target}}
+                                        </td>
+                                        <td class="text-nowrap">方式{{j+1}}</td>
+                                        <td>{{method}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- 影响详情 END -->
+
+    <!-- 脆弱点详情 START -->
+    <div class="container content-container" id="vul">
+        <h2>脆弱点详情</h2>
+
+        <c-vuln-detail class="risk-type-critical" title="严重脆弱点" :vulns="vuln_details.serious_vuln"></c-vuln-detail>
+
+        <c-vuln-detail class="risk-type-high" title="高危脆弱点" :vulns="vuln_details.high_vuln"></c-vuln-detail>
+
+        <c-vuln-detail class="risk-type-medium" title="中危脆弱点" :vulns="vuln_details.medium_vuln"></c-vuln-detail>
+
+        <c-vuln-detail class="risk-type-low" title="低危脆弱点" :vulns="vuln_details.low_vuln"></c-vuln-detail>
+    </div>
+    <!-- 脆弱点详情 END -->
+
+    <!-- 报告说明 START -->
+    <div class="container content-container statement-container" id="copyright">
+        <h2>版权说明</h2>
+        <section>
+            <p class="mb-2 text-indent-2em">
+                本文档中出现的任何文字叙述、图片、过程等内容，除另有特别注明，版权均属最终用户所有，受到有关产权及版权法保护。任何个人、组织及机构未经最终用户的授权许可，不得以任何方式复制或引用本文件的片段。
+            </p>
+        </section>
+    </div>
+    <!-- 报告说明 END -->
+</body>
+
+<script>
+    const app = Vue.createApp({
+        data() {
+            return reportData; // static/js/data.js中存放reportData
+        },
+        computed: {
+            // 测试安全指数 - 安全等级
+            riskLevel() {
+                let score = this.kpsi;
+                if (score < 60) {
+                    return '高风险';
+                } else if (score < 85) {
+                    return '一般';
+                } else {
+                    return '安全';
+                }
+            },
+            // 影响详情
+            impactDetails() {
+                const keys = [
+                    {
+                        "key": "action_directory",
+                        "name": "AD域"
+                    },
+                    {
+                        "key": "ad_user",
+                        "name": "AD域用户"
+                    },
+                    {
+                        "key": "host",
+                        "name": "主机"
+                    },
+                    {
+                        "key": "storage",
+                        "name": "存储"
+                    },
+                    {
+                        "key": "web",
+                        "name": "WEB应用"
+                    },
+                    {
+                        "key": "basic_service",
+                        "name": "基础服务"
+                    },
+                    {
+                        "key": "cloud",
+                        "name": "云服务"
+                    },
+                    {
+                        "key": "sensitive_data",
+                        "name": "敏感数据"
+                    },
+                    {
+                        "key": "code_repositories",
+                        "name": "代码仓库"
+                    },
+                    {
+                        "key": "blackmail_software",
+                        "name": "勒索软件"
+                    },
+                    {
+                        "key": "brand",
+                        "name": "品牌"
+                    }
+                ];
+                return keys.filter(({ key }) => {
+                    return this.impact_details[key];
+                }).map(({ key, name }) => {
+                    this.impact_details[key].name = name;
+                    return this.impact_details[key];
+                })
+            },
+            cloudKeyRate() {
+                return this.toPercent(this.impact_statistics.cloud_key, this.risk_number);
+            },
+            codeStoreRate() {
+                return this.toPercent(this.impact_statistics.code_store, this.risk_number); 
+            },
+            containerRate() {
+                return this.toPercent(this.impact_statistics.container, this.risk_number); 
+            },
+            controlledHostRate() {
+                return this.toPercent(this.impact_statistics.controlled_host, this.risk_number); 
+            },
+            credentialRate() {
+                return this.toPercent(this.impact_statistics.credential, this.risk_number); 
+            },
+            fileRate() {
+                return this.toPercent(this.impact_statistics.file, this.risk_number); 
+            },
+            sensInfoRate() {
+                return this.toPercent(this.impact_statistics.sens_info, this.risk_number); 
+            },
+        },
+        methods: {
+            // 渲染饼图
+            initPieChart() {
+                function splitText(text) {
+                    return text.replace(/ /g, "\n");
+                }
+
+                const key2name = {
+                    "cloud_key": "云访问密钥",
+                    "code_store": "代码仓库问题",
+                    "container": "被控制容器",
+                    "controlled_host": "被控制主机",
+                    "credential": "获取的凭证",
+                    "database": "泄漏的数据库",
+                    "file": "敏感文件",
+                    "sens_info": "泄漏的敏感信息"
+                };
+                const data = Object.keys(this.impact_statistics).map(k => {
+                    return {
+                        name: key2name[k],
+                        value: this.impact_statistics[k] || 0
+                    }
+                })
+
+                let oPie = $("#exploit-pie").get(0);
+
+                if (!oPie) return;
+
+                let pieChart = echarts.init(oPie);
+
+                option = {
+                    backgroundColor: "transparent",
+                    animation: false,
+                    color: ["#f76c26", "#29abe2", "#f7c63c", "#000", '#8e24e6', '#df0000', '#8cc63f', '#6c757d'],
+                    tooltip: {
+                        show: true,
+                    },
+                    series: [
+                        {
+                            type: "pie",
+                            selectedOffset: 30,
+                            radius: [0, "70%"],
+                            stillShowZeroSum: false,
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: (params) => {
+                                        return `${params.value}%`;
+                                    },
+                                    fontSize: 12,
+                                    position: "inside",
+                                },
+                            },
+                            labelLine: {
+                                length: 20,
+                            },
+                            tooltip: {
+                                formatter: (params) => {
+                                    return `${splitText(params.name)}: ${params.value}%`;
+                                },
+                            },
+                            data,
+                        },
+                        {
+                            type: "pie",
+                            selectedOffset: 30,
+                            radius: [0, "70%"],
+                            stillShowZeroSum: false,
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: (params) => {
+                                        return `${splitText(params.name)}`;
+                                    },
+                                    fontSize: 12,
+                                },
+                            },
+                            labelLine: {
+                                length: 13,
+                                length2: 0,
+                                show: false,
+                            },
+                            tooltip: {
+                                formatter: (params) => {
+                                    return `${splitText(params.name)}: ${params.value}%`;
+                                },
+                            },
+                            data,
+                        },
+                    ],
+                };
+
+                pieChart.setOption(option);
+
+                $(window).on("resize", () => pieChart.resize());
+            },
+            initClickEvent() {
+                document.documentElement.addEventListener("click", function (e) {
+                    let target = e.target;
+                    if (
+                        target.tagName == "A" &&
+                        target.className !== "anchor-item"
+                    ) {
+                        window.open(target.href, "_blank");
+                        e.preventDefault();
+                    }
+                });
+            },
+            toPercent(val, total) {
+                if(total === 0) return '0%';
+                return (val/total*100).toFixed(2) + '%';
+            }
+        },
+        mounted() {
+            document.title = data.test_name;
+            this.initPieChart();
+            this.initClickEvent();
+        },
+    });
+
+    // 脆弱点详情组件
+    app.component('c-vuln-detail', {
+        template: '#c-vuln-detail',
+        props: ['title', 'vulns']
+    });
+    app.mount(document.body);
+
+
+
+</script>
+<script>
+
+
+</script>
+
+</html>

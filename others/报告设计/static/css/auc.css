@@ -1,0 +1,127 @@
+.generated-by {
+    font-size:1.4rem;
+}
+
+.cover-big-logo {
+    float:right;
+}
+
+.cover-container {
+
+    padding-top: 60px;
+}
+
+p.anchor-label {
+	font-size:.8rem;
+	text-transform:uppercase;
+	margin-bottom: 7px;
+}
+
+h1, h2, h3 { font-weight: 600; line-height:1.1; }
+h2, h3, h4 { color:#343a40; }
+
+h1 {
+    font-size: 2.5rem;
+    margin-top:15px;
+}
+
+h2 {
+    font-size: 1.6rem;
+    margin-bottom:10px;
+}
+
+h3 {
+    font-size: 1.4rem;
+    color:#333;
+}
+
+
+li.vulnerability-title h3 {
+	width:85%;
+	display:inline-block;
+	float:left;
+}
+li.vulnerability-title .critical-badge {
+	width:15%;
+	display:inline-block;
+	float:right;
+}        
+                  
+
+h4 {
+    font-size: 1.1rem;
+    color:#333;
+}
+
+.health-score {
+    font-size:.9rem;
+    display:inline-block;
+    padding-top:8px;
+}
+
+.mt-5, .my-5 {
+    margin-top: 2rem !important;
+}
+
+.px-3 {
+    padding-right: .5rem !important;
+    padding-left: .5rem !important;
+}
+
+
+
+.badge {
+	margin-right: .5rem;
+}
+
+thead tr.bg-secondary th.text-white {
+    	font-size:.7rem !important;
+    	text-transform: uppercase;
+    }
+
+.anchor-wrap .anchor-item {
+    display:inline-block;
+    width: 170px;
+    font-size: .8rem;
+    line-height:1.2;
+    font-weight: 400;
+    color: #000;
+    margin-right: 7px;
+    margin-bottom:5px;
+    background-color:#f0f0f0;
+    padding:3px 5px;
+    border-radius:6px;
+    text-decoration: none;
+}
+a.anchor-item:hover {
+    color: #fff !important;
+    background-color:#8cc63f;
+    text-decoration:none;
+}
+
+.f-plugin-table li>span {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-weight: 600;
+    letter-spacing:0.5px;
+    color: #333;
+    display: inline-block;
+    padding: 4px 7px;
+    background-color: white;
+    font-size: .75rem;
+}
+.f-plugin-table li.active>span {
+    color: #fff;
+    background-color: #8cc63f;
+    border-radius: 6px;
+}
+
+
+.anchor-wrap.owasp-anchor-wrap .anchor-item {
+    width: 230px;
+    height: 35px;
+}
+
+.anchor-row {
+    display: flex;
+}

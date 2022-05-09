@@ -1,0 +1,21 @@
+<svg width="11.69" height="11" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style>.cls-1{fill:#ffffff;}</style>
+  <symbol id="New_Symbol" data-name="New Symbol" viewBox="0 0 11.69 11">
+   <rect class="cls-1" y="4.68" width="9.72" height="1.64" id="svg_1"/>
+   <polygon class="cls-1" points="6.19 11 5.04 9.85 9.4 5.5 5.04 1.15 6.19 0 11.69 5.5 6.19 11" id="svg_2"/>
+  </symbol>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect x="-1" y="-1" width="13.69" height="13" id="canvas_background" fill="none"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="Layer_2" data-name="Layer 2">
+   <g id="Layer_2-2" data-name="Layer 2">
+    <use width="11.69" height="11" xlink:href="#New_Symbol" id="svg_3"/>
+   </g>
+  </g>
+ </g>
+</svg>

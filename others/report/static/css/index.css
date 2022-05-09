@@ -1,0 +1,105 @@
+thead tr td {
+  vertical-align: middle !important;
+}
+
+tbody tr:last-child:nth-child(even) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@font-face {
+  font-family: siYuan;
+  src: url('../font/SourceHanSans.otf');
+}
+
+* {
+  hyphens: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #333333;
+  overflow-wrap: break-word;
+  font-family: siYuan;
+}
+a {
+  color: #386FFF;
+  text-decoration: none;
+}
+
+html,
+body {
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: 400;
+  background-color: #f2f2f2;
+}
+
+body {
+  /* UI为 1240px * 1754px */
+  width: 314mm;
+  margin: auto !important;
+  padding: 0 !important;
+}
+
+table td {
+  vertical-align: middle !important;
+  text-align: center;
+  word-break: break-word;
+}
+tbody tr:nth-of-type(even) td {
+  background: #F3F3F3 !important;
+}
+
+pre {
+  white-space: pre-wrap !important;
+}
+
+@page {
+  size: a4 !important;
+  margin: 0cm !important;
+}
+
+@media print {
+  html,
+  body {
+    margin: 0 auto !important;
+    padding: 0 !important;
+    width: 314mm !important;
+    height: 444mm !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    background: transparent !important;
+  }
+  table {
+    page-break-after: auto;
+  }
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  td {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  thead {
+    display: table-header-group;
+  }
+  tfoot {
+    display: table-footer-group;
+  }
+  .common-page {
+    min-height: 0 !important;
+    page-break-after: always;
+  }
+  .script-test {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  .nav-floor-container {
+    display: none !important;
+  }
+  .report-cover {
+    height: 444mm;
+  }
+  .content {
+    padding: 104px 40px 0 40px !important;
+  }
+}
