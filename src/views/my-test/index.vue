@@ -12,6 +12,7 @@
           <el-dropdown-item command="topology-demo">AntV G6拓扑图demo</el-dropdown-item>
           <el-dropdown-item command="d3-demo">d3 demo</el-dropdown-item>
           <el-dropdown-item command="g6-demo">g6 demo</el-dropdown-item>
+          <el-dropdown-item command="echarts-demo">echarts demo</el-dropdown-item>
           <el-dropdown-item command="prevent-click">vue全局挂载防暴力点击通用方法</el-dropdown-item>
           <el-dropdown-item command="md5">md5加密</el-dropdown-item>
           <el-dropdown-item command="lazy">懒加载</el-dropdown-item>
@@ -68,6 +69,7 @@ import PreventClick from './components/prevent-click'
 import TopologyDemo from './components/topology-demo'
 import D3Demo from './components/d3-demo'
 import G6Demo from './components/g6-demo'
+import EchartsDemo from './components/echarts-demo'
 import Lazy from './components/lazy'
 import UtilsTest from './components/utils-test'
 import ScrollTop from './components/scroll-top'
@@ -88,6 +90,7 @@ export default {
     TopologyDemo,
     D3Demo,
     G6Demo,
+    EchartsDemo,
     Lazy,
     UtilsTest,
     ScrollTop,
